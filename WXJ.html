@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WXJourney</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;900&display=swap" rel="stylesheet">
 
@@ -30,6 +30,7 @@
             --welcomeborder:#bf00ff;
             --underlines: #CCFF00;
             --addbutton: #CCFF00;
+            --addbtndim: #CCFF0080;
             --tempuniton: #f706cf;
             --tempunitoff: #f706cf80;
             --tempunitborder: #f706cf;
@@ -59,6 +60,7 @@
             --welcomeborder:#8a47c9;
             --underlines: #00f0ff;
             --addbutton: #00f0ff;
+            --addbtndim: #00f0ff80;
             --tempuniton: #E97DB1;
             --tempunitoff: #E97DB180;
             --tempunitborder: #E97DB1;
@@ -88,6 +90,7 @@
             --welcomeborder:#378258;
             --underlines: #962631;
             --addbutton: #962631;
+            --addbtndim: #96263180;
             --tempuniton: #378258;
             --tempunitoff: #37825880;
             --tempunitborder: #378258;
@@ -106,10 +109,20 @@
             color: var(--conditions);
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 10px;
+            
+            /* Dynamically pads content away from status bar and navigation notch */
+            padding-top: calc(10px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(10px + env(safe-area-inset-left, 0px));
+            padding-right: calc(10px + env(safe-area-inset-right, 0px));
+            
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
+            height: 100dvh;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .header-container {
@@ -119,6 +132,7 @@
             width: 100%;
             max-width: 400px;
             margin-bottom: 12px;
+            flex-shrink: 0;
             
             /* Enables container query sizing for descendants */
             container-type: inline-size;
@@ -246,6 +260,7 @@
             width: 100%;
             max-width: 400px;
             margin-bottom: 10px;
+            flex-shrink: 0;
             container-type: inline-size;
         }
 
@@ -295,6 +310,7 @@
             margin-bottom: 10px;
             box-sizing: border-box;
             display: none; /* Hidden by default */
+            flex-shrink: 0;
         }
 
         .input-group {
@@ -374,8 +390,8 @@
         }
 
         #add-btn {
-            color: var(--addbutton);
-            border: 1px solid var(--addbutton);
+            color: var(--addbtndim);
+            border: 1px solid var(--addbtndim);
             font-weight: normal;
             padding: 0 10px;
             width: 38px;
@@ -387,6 +403,12 @@
             flex-shrink: 0;
             container-type: inline-size;
             font-size: clamp(0.8rem, 50cqw, 1.2rem);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        #add-btn.active {
+            color: var(--addbutton);
+            border-color: var(--addbutton);
         }
 
         /* Unit Toggle Styling inside Current Journey Header */
@@ -500,6 +522,15 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE / Edge */
+        }
+
+        #journey-list::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .entry-card {
@@ -721,7 +752,13 @@
             background-color: var(--welcomebackground);
             z-index: 1000;
             overflow-y: auto;
-            padding: 20px 10px;
+            
+            /* Account for top and bottom safe area insets inside overlays */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(10px + env(safe-area-inset-left, 0px));
+            padding-right: calc(10px + env(safe-area-inset-right, 0px));
+            
             box-sizing: border-box;
             align-items: flex-start;
             justify-content: center;
@@ -741,6 +778,18 @@
             margin-bottom: 20px;
             position: relative;
             line-height: 1.4;
+        }
+
+        /* Journeys modal specific overlay structure */
+        #journeys-modal {
+            overflow-y: hidden;
+        }
+
+        #journeys-modal .controls-container {
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100dvh - 40px);
+            margin-bottom: 0;
         }
 
         .welcome-overlay h2 {
@@ -808,6 +857,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .journeys-header-actions {
@@ -820,6 +870,15 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE / Edge */
+        }
+
+        #journey-page-list::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
         
         .daily-journey-record-card {
@@ -906,8 +965,8 @@
         }
 
         #journey-dialog-save {
-            color: var(--addbutton);
-            border: 1px solid var(--addbutton);
+            color: var(--addbtndim);
+            border: 1px solid var(--addbtndim);
             width: 38px;
             height: 38px;
             font-weight: normal;
@@ -921,6 +980,12 @@
             box-sizing: border-box;
             container-type: inline-size;
             font-size: clamp(0.8rem, 50cqw, 1.2rem);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        #journey-dialog-save.active {
+            color: var(--addbutton);
+            border-color: var(--addbutton);
         }
 
         .color-blue { color: var(--header); font-weight: bold; }
@@ -1001,7 +1066,7 @@
     </div>
 </div>
 
-<!-- Hidden by default Controls Container -->
+<!-- Controls Container -->
 <div class="controls-container" id="main-controls-container">
     <div class="input-group">
         <input type="text" id="location-input" placeholder="Enter City/Town..." autocomplete="off">
@@ -1028,7 +1093,7 @@
             </div>
         </div>
         
-        <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 10px;">
+        <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 10px; flex-shrink: 0;">
             <div class="daily-journey-record-card" id="save-current-btn" style="flex: 2; justify-content: center; padding: 12px 4px; height: auto; min-height: unset;">
                 <span class="journey-record-name" style="font-size: clamp(0.55rem, 7.5cqw, 0.9rem); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">SAVE DAILY JOURNEY</span>
             </div>
@@ -1176,6 +1241,9 @@
     if (!allJourneys.some(j => j.id === currentJourneyId)) {
         currentJourneyId = 'default_journey';
     }
+    
+    // Explicitly track active journey state changes
+    let activeJourneyId = null;
 
     // Helper to get active journey's entries reference
     function getCurrentJourneyEntries() {
@@ -1203,6 +1271,16 @@
     const editJourneyBtn = document.getElementById('edit-journey-btn');
     const closeControlsBtn = document.getElementById('close-controls-btn');
     const currentJourneyNameDisplay = document.getElementById('current-journey-name-display');
+
+    function updateAddButtonState() {
+        const hasLocation = !!selectedLocationInfo;
+        const hasDate = datePicker && datePicker.selectedDates && datePicker.selectedDates.length > 0;
+        if (hasLocation && hasDate) {
+            addBtn.classList.add('active');
+        } else {
+            addBtn.classList.remove('active');
+        }
+    }
 
     editJourneyBtn.addEventListener('click', () => {
         mainControlsContainer.style.display = 'block';
@@ -1273,6 +1351,16 @@
     const closeJourneyDialogBtn = document.getElementById('close-journey-dialog-btn');
     const journeyDialogSave = document.getElementById('journey-dialog-save');
 
+    function updateJourneyDialogSaveState() {
+        if (journeyNameInput.value.trim().length > 0) {
+            journeyDialogSave.classList.add('active');
+        } else {
+            journeyDialogSave.classList.remove('active');
+        }
+    }
+
+    journeyNameInput.addEventListener('input', updateJourneyDialogSaveState);
+
     openJourneysBtn.addEventListener('click', () => {
         renderJourneyPageList();
         journeysModal.style.display = 'flex';
@@ -1287,6 +1375,7 @@
         isDuplicatingDaily = false; // Normal add new journey
         editingJourneyId = null;
         journeyNameInput.value = '';
+        updateJourneyDialogSaveState();
         journeyNameDialog.style.display = 'flex';
         journeyNameInput.focus();
     });
@@ -1296,6 +1385,7 @@
         isDuplicatingDaily = true; // Sets flag so save will copy current entries
         editingJourneyId = null;
         journeyNameInput.value = '';
+        updateJourneyDialogSaveState();
         journeyNameDialog.style.display = 'flex';
         journeyNameInput.focus();
     });
@@ -1376,9 +1466,9 @@
             // Make the entire card clickable to load the journey
             card.onclick = () => {
                 currentJourneyId = j.id;
+                activeJourneyId = null; // Reset active state so renderList treats opening/reopening a journey as a fresh load
                 journeyEntries = getCurrentJourneyEntries();
                 saveAllJourneys();
-                mainControlsContainer.style.display = 'none';
                 journeysModal.style.display = 'none';
                 renderList();
             };
@@ -1403,6 +1493,7 @@
                     editingJourneyId = j.id;
                     isDuplicatingDaily = false;
                     journeyNameInput.value = j.name;
+                    updateJourneyDialogSaveState();
                     journeyNameDialog.style.display = 'flex';
                     journeyNameInput.focus();
                 };
@@ -1416,8 +1507,8 @@
                     allJourneys = allJourneys.filter(item => item.id !== j.id);
                     if (currentJourneyId === j.id) {
                         currentJourneyId = 'default_journey';
+                        activeJourneyId = null;
                         journeyEntries = getCurrentJourneyEntries();
-                        mainControlsContainer.style.display = 'none';
                     }
                     saveAllJourneys();
                     renderJourneyPageList();
@@ -1440,10 +1531,14 @@
         altInput: true,
         altFormat: "d-M",   
         conjunction: " to ",
+        onChange: function(selectedDates, dateStr, instance) {
+            updateAddButtonState();
+        },
         onClose: function(selectedDates, dateStr, instance) {
             if (selectedDates.length === 1) {
                 instance.setDate([selectedDates[0], selectedDates[0]], true);
             }
+            updateAddButtonState();
         }
     });
 
@@ -1483,6 +1578,9 @@
     }
 
     locationInput.addEventListener('input', async (e) => {
+        selectedLocationInfo = null;
+        updateAddButtonState();
+
         const rawQuery = e.target.value;
         if (rawQuery.trim().length < 2) { 
             suggestionsList.style.display = 'none'; 
@@ -1539,6 +1637,7 @@
                             timezone: p.timezone || 'auto' 
                         };
                         suggestionsList.style.display = 'none';
+                        updateAddButtonState();
                     };
                     suggestionsList.appendChild(li);
                 });
@@ -1764,6 +1863,19 @@
         journeyEntries = getCurrentJourneyEntries();
         journeyEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
         
+        // Handles initial load / switching between journeys
+        if (currentJourneyId !== activeJourneyId) {
+            activeJourneyId = currentJourneyId;
+            if (journeyEntries.length === 0) {
+                mainControlsContainer.style.display = 'block';
+            } else {
+                mainControlsContainer.style.display = 'none';
+            }
+        } else if (journeyEntries.length === 0) {
+            // When all records are manually deleted from the current journey
+            mainControlsContainer.style.display = 'block';
+        }
+
         // Updates the new header name anytime the list renders
         updateCurrentJourneyDisplay();
 
@@ -1933,6 +2045,7 @@
         datePicker.clear();
         selectedLocationInfo = null;
         addBtn.textContent = "✓";
+        updateAddButtonState();
 
         renderList();
     });
@@ -2030,6 +2143,7 @@
 
     applyTheme();
     updateToggleDisplay();
+    updateAddButtonState();
     renderList();
 </script>
 </body>
