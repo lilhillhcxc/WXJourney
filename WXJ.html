@@ -285,8 +285,8 @@
 
         #edit-journey-btn {
             background: transparent;
-            color: var(--wxtimes);
-            border: 1px solid var(--wxtimes);
+            color: var(--addbutton);
+            border: 1px solid var(--addbutton);
             padding: 0;               
             font-weight: bold;
             height: 28px;             /* Sized to fit comfortably inside 48px container */
@@ -752,6 +752,8 @@
             background-color: var(--welcomebackground);
             z-index: 1000;
             overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE / Edge */
             
             /* Account for top and bottom safe area insets inside overlays */
             padding-top: calc(20px + env(safe-area-inset-top, 0px));
@@ -765,6 +767,10 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .welcome-overlay::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
         /* Ensure journey modal controls show by default inside overlay */
         .welcome-overlay .controls-container {
             display: block; 
@@ -775,9 +781,33 @@
             max-width: 400px;
             box-sizing: border-box;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             position: relative;
             line-height: 1.4;
+        }
+
+        /* Welcome modal specific overlay structure */
+        #welcome-modal {
+            overflow-y: hidden;
+        }
+
+        #welcome-modal .controls-container {
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100dvh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+        }
+
+        .welcome-content-body {
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            padding-top: 0px; /* Creates the 6px buffer below the fixed h2 underline */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE / Edge */
+        }
+
+        .welcome-content-body::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         /* Journeys modal specific overlay structure */
@@ -788,7 +818,7 @@
         #journeys-modal .controls-container {
             display: flex;
             flex-direction: column;
-            max-height: calc(100dvh - 40px);
+            max-height: calc(100dvh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
             margin-bottom: 0;
         }
 
@@ -803,6 +833,7 @@
             text-align: left;
             border-bottom: 1px solid var(--underlines);
             background: none;
+            flex-shrink: 0;
         }
 
         .welcome-overlay h3 {
@@ -1123,75 +1154,77 @@
         <button class="absolute-close-btn" id="close-welcome-btn">X</button>
         <h2><SPAN STYLE="FONT-WEIGHT:100">WELCOME</SPAN><SPAN STYLE="FONT-WEIGHT:400">TO</SPAN>
             <p style="margin: 0; FONT-WEIGHT:400">WX<SPAN STYLE="FONT-WEIGHT:100">JOURNEY</SPAN></p></h2>
-        <div class="intro-text">
-            <p>Create custom weather forecasts by date and location.</p>
+        <div class="welcome-content-body">
+            <div class="intro-text">
+                <p>Create custom weather forecasts by date and location.</p>
+            </div>
+
+            <h3>How to use:</h3>
+
+            <div class="instruction-list">
+                <div class="instruction-card">
+                    <span class="instruction-title">Add record(s)</span>
+                    Enter a location using the <span class="color-blue">[location picker]</span>. Select a single date or date range in the <span class="color-green">[date picker]</span>. Tap <span class="color-add">[✓]</span> to create the record(s).
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Refresh forecast</span>
+                    Use <span class="color-red">[↻]</span> to update the forecasts. New forecast data is available at 00:00, 06:00, 12:00, and 18:00 UTC.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Change Temperature Unit</span>
+                    Tap <span class="color-pink">[°F °C]</span> to toggle the displayed unit.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Edit a record</span>
+                    Change the date of an existing record by tapping the <span class="color-green">[date picker]</span>. Records automatically sort chronologically.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Delete a record</span>
+                    Tap <span class="color-orange">[X]</span> in an existing record to delete the record.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Manage Journeys</span>
+                    Tap <span class="color-green">[JOURNEYS]</span> to open the Journeys screen where you can view, switch between, create, or delete saved journeys.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Add New Journey</span>
+                    On the Journeys screen, tap <span class="color-green">[NEW JOURNEY]</span>, enter a name for the new journey, and tap <span class="color-add">[✓]</span> to save the journey.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Save Daily Journey</span>
+                    On the Journeys screen, tap <span class="color-green">[SAVE DAILY JOURNEY]</span>, enter a name, and tap <span class="color-add">[✓]</span> to save a duplicate copy of your Daily Journey entries under a new name.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Edit Journey Name</span>
+                    Tap <span class="color-purple">[✎]</span> in the active journey to edit forecast details.
+                </div>
+
+                <div class="instruction-card">
+                    <span class="instruction-title">Theme Selection</span>
+                    Tap <span class="color-red">[❀]</span> to cycle through the color themes.
+                </div>
+            </div>
+            <div class="intro-text">
+            <p>Forecast data is provided by the National Weather Service (NWS) and the European Centre for Medium-Range Weather Forecasts (ECMWF).</p>
+            <p>NWS date is available for 7 days from the current date and is used for locations within the U.S.</p>
+            <p>ECMWF data is available for 15 days from the current date and is used for locations outside of the U.S. or when NWS data is not available.</p>
+            <p>Forecast data automatically refreshes at 3AM, 9AM, 3PM, and 9PM UTC. No data loss occurs if the app attempts a refresh when no data connection is present.</p>
+            <p>The temperatures displayed for AM, PM, and EV are the predicted temperatures for 8AM, 2PM, and 8PM respectively.</p>
+            <p>The weather conditions displayed are for a range of six hours after the start of the respective time period.</p>
+            <p>Tapping the location name in a record will open the Windy.com website for that location.</p>
+            </div>
+            <div class="instruction-text madeby-text">
+            <SPAN STYLE="FONT-WEIGHT:300">created by </SPAN><SPAN STYLE="FONT-WEIGHT:bold">BRITO</SPAN><SPAN STYLE="FONT-WEIGHT:300">MODS</SPAN>
         </div>
-
-        <h3>How to use:</h3>
-
-        <div class="instruction-list">
-            <div class="instruction-card">
-                <span class="instruction-title">Add record(s)</span>
-                Enter a location using the <span class="color-blue">[location picker]</span>. Select a single date or date range in the <span class="color-green">[date picker]</span>. Tap <span class="color-add">[✓]</span> to create the record(s).
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Refresh forecast</span>
-                Use <span class="color-red">[↻]</span> to update the forecasts. New forecast data is available at 00:00, 06:00, 12:00, and 18:00 UTC.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Change Temperature Unit</span>
-                Tap <span class="color-pink">[°F °C]</span> to toggle the displayed unit.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Edit a record</span>
-                Change the date of an existing record by tapping the <span class="color-green">[date picker]</span>. Records automatically sort chronologically.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Delete a record</span>
-                Tap <span class="color-orange">[X]</span> in an existing record to delete the record.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Manage Journeys</span>
-                Tap <span class="color-green">[JOURNEYS]</span> to open the Journeys screen where you can view, switch between, create, or delete saved journeys.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Add New Journey</span>
-                On the Journeys screen, tap <span class="color-green">[NEW JOURNEY]</span>, enter a name for the new journey, and tap <span class="color-add">[✓]</span> to save the journey.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Save Daily Journey</span>
-                On the Journeys screen, tap <span class="color-green">[SAVE DAILY JOURNEY]</span>, enter a name, and tap <span class="color-add">[✓]</span> to save a duplicate copy of your Daily Journey entries under a new name.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Edit Journey Name</span>
-                Tap <span class="color-purple">[✎]</span> in the active journey to edit forecast details.
-            </div>
-
-            <div class="instruction-card">
-                <span class="instruction-title">Theme Selection</span>
-                Tap <span class="color-red">[✨︎]</span> to cycle through the color themes.
-            </div>
         </div>
-        <div class="intro-text">
-        <p>Forecast data is provided by the National Weather Service (NWS) and the European Centre for Medium-Range Weather Forecasts (ECMWF).</p>
-        <p>NWS date is available for 7 days from the current date and is used for locations within the U.S.</p>
-        <p>ECMWF data is available for 15 days from the current date and is used for locations outside of the U.S. or when NWS data is not available.</p>
-        <p>Forecast data automatically refreshes at 3AM, 9AM, 3PM, and 9PM UTC. No data loss occurs if the app attempts a refresh when no data connection is present.</p>
-        <p>The temperatures displayed for AM, PM, and EV are the predicted temperatures for 8AM, 2PM, and 8PM respectively.</p>
-        <p>The weather conditions displayed are for a range of six hours after the start of the respective time period.</p>
-        <p>Tapping the location name in a record will open the Windy.com website for that location.</p>
-        </div>
-        <div class="instruction-text madeby-text">
-        <SPAN STYLE="FONT-WEIGHT:300">created by </SPAN><SPAN STYLE="FONT-WEIGHT:bold">BRITO</SPAN><SPAN STYLE="FONT-WEIGHT:300">MODS</SPAN>
-    </div>
     </div>
 </div>
 
